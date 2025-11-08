@@ -17,12 +17,12 @@
     </pl.droidsonroids.gif.GifImageView>
     <TextView
         android:layout_gravity="center_horizontal"
-        android:id="@+id/MoneyGrabber"
+        android:id="@+id/MoneyCollector"
         android:layout_width="500dp"
         android:layout_height="100dp"
         android:gravity="center_horizontal"
         android:keepScreenOn="true"
-        android:text="@string/MoneyGrabber"
+        android:text="@string/MoneyCollector"
         android:textColor="#000"
         android:textSize="50sp"
         android:textStyle="bold" />

@@ -1,4 +1,4 @@
-# *Money Grabber*
+# *Money Collector*
 
 A simple 2D game where  you controll the character by touching the screen and thus making it move up or down.
 The goal is to grab coins without getting hit by rockets..
