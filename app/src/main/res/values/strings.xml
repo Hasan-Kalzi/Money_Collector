@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Money Grabb</string>
+    <string name="Screen">Screen</string>
+    <string name="dummy_button">Exit</string>
+    <string name="Play">PLAY!</string>
+    <string name="coin">Coin</string>
+    <string name="MoneyGrabber">MONEY GRABBER</string>
+</resources>
