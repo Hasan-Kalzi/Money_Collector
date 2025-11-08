@@ -12,50 +12,50 @@ import android.view.MotionEvent;
 import android.view.SurfaceView;
 import java.util.Random;
 
-// Surface view är när man måste ändra saker på skärmen jätte fort
+// SurfaceView is used when you need to update the screen very quickly
 @SuppressLint("ViewConstructor")
 public class GameView extends SurfaceView implements Runnable {
     private final Random random;
     private Thread thread;
 
-    // Två background så att det ser ut som att den rör sig
+    // Two backgrounds to make it look like it’s moving
     private Background background1, background2;
     private int screenX; int screenY;
     static public float screenRatioX, screenRatioY;
-    // isPlaying måste bröja från false, annars startas den ej.
+    // isPlaying must start as false, otherwise it won’t start
     private boolean isPlaying = false;
-    //char
+    // Character
     private Char chara;
-    //Rockets
+    // Rockets
     private Rockets[] rockets;
-    //Coins
+    // Coins
     private Coins[] coins;
-    // Paint för Canvas
+    // Paint for Canvas
     private Paint paint;
     // Score
     int score=0;
 
-    //The media players för spelets ljud
+    // Media players for game sounds
     static MediaPlayer gameOnsound;
     static MediaPlayer gameOnsound2;
     static MediaPlayer collectedCoin;
     static MediaPlayer gameOver;
     private static int mediaLooper = 1;
 
-    float touchY =Char.y;
+    float touchY = Char.y;
     boolean gameIsOver;
 
 
-    public  GameView(Context context, int screenX, int screenY){
+    public GameView(Context context, int screenX, int screenY){
         super(context);
 
-        //initializing  media players för spelets ljud
+        // Initialising media players for the game’s sounds
         gameOnsound = MediaPlayer.create(context,R.raw.gameon);
         gameOnsound2 = MediaPlayer.create(context,R.raw.gameon2);
-        collectedCoin= MediaPlayer.create(context,R.raw.coin_collect);
-        gameOver= MediaPlayer.create(context,R.raw.gameover);
+        collectedCoin = MediaPlayer.create(context,R.raw.coin_collect);
+        gameOver = MediaPlayer.create(context,R.raw.gameover);
 
-        //initializing the Backgrounds för spelets  Canvas.
+        // Initialising the backgrounds for the game’s canvas
         this.screenX = screenX;
         this.screenY = screenY;
         screenRatioX = 1920f / screenX;
@@ -64,53 +64,47 @@ public class GameView extends SurfaceView implements Runnable {
         background1 = new Background(screenX, screenY, getResources());
         background2 = new Background(screenX, screenY, getResources());
 
-        // background rör sig bara i x-led
-        // vi placerar background2 efter background1
+        // Background moves only along the X-axis
+        // We position background2 after background1
         background2.x = screenX;
 
-
-        // Skapar char obj
+        // Create character object
         chara = new Char(getResources());
 
-        //initializing the coin class object
+        // Initialising the coin class objects
         coins = new Coins[4];
 
-        for (int i = 0;i < 4;i++) {
-
+        for (int i = 0; i < 4; i++) {
             Coins coin = new Coins(getResources());
             coins[i] = coin;
-
         }
+
         random = new Random();
-        //initializing the rocket class object
+
+        // Initialising the rocket class objects
         rockets = new Rockets[1];
 
-        for (int i = 0;i < 1;i++) {
-
+        for (int i = 0; i < 1; i++) {
             Rockets rocket = new Rockets(getResources());
             rockets[i] = rocket;
-
         }
 
-
         this.paint = new Paint();
-
-
     }
 
     @Override
     public void run(){
 
         while(isPlaying) {
-            // Loopar mellan två music filer
-            if (!gameOnsound.isPlaying()&&!gameOnsound2.isPlaying()){
-                if (mediaLooper==1){
+            // Loops between two music files
+            if (!gameOnsound.isPlaying() && !gameOnsound2.isPlaying()){
+                if (mediaLooper == 1){
                     gameOnsound.start();
-                    mediaLooper=2;
+                    mediaLooper = 2;
                 }
-                else if (mediaLooper==2){
+                else if (mediaLooper == 2){
                     gameOnsound2.start();
-                    mediaLooper=1;
+                    mediaLooper = 1;
                 }
             }
             draw();
@@ -120,24 +114,22 @@ public class GameView extends SurfaceView implements Runnable {
 
     }
     void resume(){
-
         isPlaying = true;
         thread = new Thread(this);
         thread.start();
-
     }
     void pause(){
         try {
-            // pause the music on the game pause
+            // Pause the music when the game is paused
             if (gameOnsound.isPlaying()){
-                mediaLooper=1;
+                mediaLooper = 1;
                 gameOnsound.pause();
             }
             else if (gameOnsound2.isPlaying()){
-                mediaLooper=2;
+                mediaLooper = 2;
                 gameOnsound2.pause();
             }
-            isPlaying=false;
+            isPlaying = false;
             thread.join();
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -155,6 +147,7 @@ public class GameView extends SurfaceView implements Runnable {
         if (background2.x + background2.background.getWidth() < 120){
             background2.x = screenX;
         }
+
         for (Coins coin : coins) {
             coin.x -= coin.speed;
             if (coin.x + coin.width < 0) {
@@ -173,9 +166,9 @@ public class GameView extends SurfaceView implements Runnable {
 
                 coin.wasCollected = false;
             }
-            if(Rect.intersects(chara.getDetectCollision(),coin.getDetectCollision())){
+            if(Rect.intersects(chara.getDetectCollision(), coin.getDetectCollision())){
                 score++;
-                coin.x=-1500;
+                coin.x = -1500;
                 collectedCoin.start();
             }
             for (Rockets rocket : rockets) {
@@ -204,16 +197,16 @@ public class GameView extends SurfaceView implements Runnable {
         }
 
         if (!chara.notTouched)
-            if (Char.y+chara.height/2f-touchY<-50)
+            if (Char.y + chara.height / 2f - touchY < -50)
                 Char.y += 20 * screenRatioY;
-            else if (Char.y+chara.height/2f>touchY)
+            else if (Char.y + chara.height / 2f > touchY)
                 Char.y -= 20 * screenRatioY;
 
         if (Char.y < 0) {
             Char.y = 0;
         }
-        if (Char.y > screenY-chara.height*screenRatioY ) {
-            Char.y = screenY-chara.height;
+        if (Char.y > screenY - chara.height * screenRatioY) {
+            Char.y = screenY - chara.height;
         }
 
     }
@@ -221,31 +214,29 @@ public class GameView extends SurfaceView implements Runnable {
     private void draw() {
         if(getHolder().getSurface().isValid())   {
 
-            // Returner canvasen som ska visas på skärmen
+            // Returns the canvas that will be displayed on screen
             // Canvas
             Canvas canvas = getHolder().lockCanvas();
 
-            // "Ritar" vår bakgrund på canvasen
+            // “Draws” our background on the canvas
             canvas.drawBitmap(background1.background, background1.x, background1.y, paint);
             canvas.drawBitmap(background2.background2, background2.x, background2.y, paint);
 
-            // Ritar nu character
+            // Draws the character
             canvas.drawBitmap(chara.getChar(), Char.x, Char.y, paint);
 
-
-            //Ritar coins image
+            // Draws coin images
             for (Coins coin : coins)
                 canvas.drawBitmap(coin.getCoin(), coin.x, coin.y, paint);
 
-            //Ritar rocket image
+            // Draws rocket images
             for (Rockets rocket : rockets)
                 canvas.drawBitmap(rocket.getRocket(), rocket.x, rocket.y, paint);
 
-            // Ritar score table
+            // Draws the score table
             paint.setTextSize(70);
             paint.setColor(Color.WHITE);
-            canvas.drawText("Score: " + score, 1300*screenRatioX, 50 * screenRatioY, paint);
-
+            canvas.drawText("Score: " + score, 1300 * screenRatioX, 50 * screenRatioY, paint);
 
             if (gameIsOver) {
                 isPlaying = false;
@@ -253,11 +244,11 @@ public class GameView extends SurfaceView implements Runnable {
                 canvas.drawBitmap(chara.boom, Char.x, Char.y, paint);
                 paint.setTextSize(100);
                 paint.setColor(Color.BLACK);
-                canvas.drawText("Game Over: " + score, 600*screenRatioX, 600 * screenRatioY, paint);
+                canvas.drawText("Game Over: " + score, 600 * screenRatioX, 600 * screenRatioY, paint);
                 getHolder().unlockCanvasAndPost(canvas);
                 return;
             }
-            // Nu är canvasen klar så vi måste bara visa den på skärmen
+            // The canvas is now ready, so we just need to display it on the screen
             getHolder().unlockCanvasAndPost(canvas);
         }
     }
@@ -272,7 +263,6 @@ public class GameView extends SurfaceView implements Runnable {
     }
 
     public static void stopMusic() {
-
         gameOnsound.stop();
     }
 
@@ -280,17 +270,16 @@ public class GameView extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-
         switch (event.getAction()) {
             case MotionEvent.ACTION_UP:
                 chara.notTouched = true;
                 break;
             case MotionEvent.ACTION_DOWN:
-                touchY=event.getY();
+                touchY = event.getY();
                 chara.notTouched = false;
                 break;
         }
-        //if the game's over, tappin on game Over screen sends you to MainActivity
+        // If the game is over, tapping on the Game Over screen sends you back to MainActivity
         if(gameIsOver) {
             try {
                 Thread.sleep(3000);

@@ -17,7 +17,7 @@ class Coins {
     private final Bitmap[] coin;
 
     Coins(Resources res) {
-        // Lägg all "int" för coins bilder in i array
+        // Put all "int" references for the coin images into an array
         Integer[] coin_images = {
                 R.drawable.coin0,
                 R.drawable.coin1,
@@ -46,26 +46,24 @@ class Coins {
                 R.drawable.coin24,
         };
         coin = new Bitmap[25];
-        // Decode resources för all bilder
+        // Decode resources for all images
         for(int x=0;x<25;x++) {
-             coin[x] = BitmapFactory.decodeResource(res,coin_images[x]);
+            coin[x] = BitmapFactory.decodeResource(res,coin_images[x]);
         }
 
-        // ta dimensioner av en av bilderna
+        // Get the dimensions of one of the images
         width = coin[0].getWidth();
         height = coin[0].getHeight();
-        // Scala om dimensioner
+        // Resize dimensions
         width /=8;
         height /=8;
 
         width = (int) (width * screenRatioX);
         height = (int) (height * screenRatioY);
-        // Skapar coins bilder
+        // Create the coin images
         for(int x=0;x<25;x++) {
             coin[x] = Bitmap.createScaledBitmap(coin[x], width, height, true);
         }
-
-
 
         y = -height;
     }
@@ -78,6 +76,7 @@ class Coins {
         }
         return coin[coinCounter];
     }
+
     Rect getDetectCollision () {
         return new Rect(x, y, x + width, y + height);
     }

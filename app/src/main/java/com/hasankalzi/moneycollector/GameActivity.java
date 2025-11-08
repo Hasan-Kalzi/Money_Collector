@@ -23,12 +23,12 @@ public class GameActivity extends AppCompatActivity {
         }
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-        // Point är en ett objekt med x och y koordinater
+        // Point is an object with x and y coordinates
         Point point = new Point();
-        // vi ger point skärmens storlek
+        // assign the screen size to point
         getWindowManager().getDefaultDisplay().getSize(point);
 
-        // När gameView startas kommer det att automatiskt aktivera onResume()
+        // When GameView starts, it will automatically trigger onResume()
         gameView = new GameView(this, point.x, point.y);
 
         setContentView(gameView);

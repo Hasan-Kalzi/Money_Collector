@@ -11,13 +11,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 /**
- * An HasanKalzi full-screen activity that shows and hides the system UI (i.e.
+ * A full-screen activity that shows and hides the system UI (i.e.
  * status bar and navigation/system bar) with user interaction.
  */
 public class FullscreenActivity extends AppCompatActivity {
 
     /**
-     * Some older devices needs a small delay between UI widget updates
+     * Some older devices need a small delay between UI widget updates
      * and a change of the status and navigation bar.
      */
     private static final int UI_ANIMATION_DELAY = 300;
@@ -70,27 +70,29 @@ public class FullscreenActivity extends AppCompatActivity {
         mVisible = true;
         mControlsView = findViewById(R.id.fullscreen_content_controls);
         mContentView = findViewById(R.id.Screen);
-        //initializing the media players for the game sounds
+
+        // Initialise the media player for the game’s background sound
         mp = MediaPlayer.create(FullscreenActivity.this, R.raw.game_on_main);
         mp.start();
-        // Set up the user interaction to manually show or hide the system UI.
+
+        // Set up user interaction to manually show or hide the system UI
         mContentView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 toggle();
             }
         });
+
         findViewById(R.id.Play).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 mp.stop();
-                startActivity(new Intent(FullscreenActivity.this,GameActivity.class));
-
+                startActivity(new Intent(FullscreenActivity.this, GameActivity.class));
             }
         });
-        // Upon interacting with UI controls, delay any scheduled hide()
-        // operations to prevent the jarring behavior of controls going away
-        // while interacting with the UI.
+
+        // When interacting with UI controls, delay any scheduled hide()
+        // calls to prevent the controls from disappearing abruptly
         findViewById(R.id.Exit).setOnTouchListener(new View.OnTouchListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -99,21 +101,23 @@ public class FullscreenActivity extends AppCompatActivity {
                 return true;
             }
         });
-
     }
+
     @Override
     protected void onPause() {
         super.onPause();
         if (mp.isPlaying())
             mp.pause();
     }
+
     @Override
     protected void onResume() {
         super.onResume();
         mp.start();
     }
+
     @Override
-    public void onBackPressed(){
+    public void onBackPressed() {
         finish();
     }
 
@@ -121,9 +125,8 @@ public class FullscreenActivity extends AppCompatActivity {
     protected void onPostCreate(Bundle savedInstanceState) {
         super.onPostCreate(savedInstanceState);
 
-        // Trigger the initial hide() shortly after the activity has been
-        // created, to briefly hint to the user that UI controls
-        // are available.
+        // Trigger the initial hide() shortly after the activity has been created,
+        // to briefly indicate to the user that UI controls are available
         delayedHide();
     }
 
@@ -136,7 +139,7 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     private void hide() {
-        // Hide UI first
+        // Hide the UI first
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.hide();
@@ -144,7 +147,7 @@ public class FullscreenActivity extends AppCompatActivity {
         mControlsView.setVisibility(View.GONE);
         mVisible = false;
 
-        // Schedule a runnable to remove the status and navigation bar after a delay
+        // Schedule a runnable to remove the status and navigation bar after a short delay
         mHideHandler.removeCallbacks(mShowPart2Runnable);
         mHideHandler.postDelayed(mHidePart2Runnable, UI_ANIMATION_DELAY);
     }
@@ -162,7 +165,7 @@ public class FullscreenActivity extends AppCompatActivity {
     }
 
     /**
-     * Schedules a call to hide() in delay milliseconds, canceling any
+     * Schedules a call to hide() after a given delay, cancelling any
      * previously scheduled calls.
      */
     private void delayedHide() {

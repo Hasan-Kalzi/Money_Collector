@@ -6,19 +6,19 @@ import android.graphics.BitmapFactory;
 
 class Background {
 
-    // kordinater
+    // coordinates
     int x = 0, y = 0;
     Bitmap background;
     Bitmap background2;
 
     Background(int screenX, int screenY, Resources res) {
 
-        // Instansierar bakgrunden. BitmapFactory är alltså contructor för Bitmap objektet
-        // Den tar in resource objeket och dess ID
+        // Instantiates the background. BitmapFactory is the constructor for the Bitmap object
+        // It takes in the resource object and its ID
 
         background2 = BitmapFactory.decodeResource(res, R.drawable.background2);
         background = BitmapFactory.decodeResource(res, R.drawable.background2);
-        // Skalar Bitmap objektet till rätt storlek
+        // Scales the Bitmap object to the correct size
 
         background2 = Bitmap.createScaledBitmap(background2, screenX, screenY, true);
         background = Bitmap.createScaledBitmap(background, screenX, screenY, true);

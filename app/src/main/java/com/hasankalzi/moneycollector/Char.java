@@ -15,7 +15,6 @@ class Char {
     Bitmap boom;
     Char(Resources res) {
 
-
         Integer[] coin_images = {
                 R.drawable.char1,
                 R.drawable.char2,
@@ -24,7 +23,7 @@ class Char {
                 R.drawable.char5,
         };
         chara = new Bitmap[5];
-        // Decode resources för all bilder
+        // Decode resources for all images
         for(int x=0;x<5;x++) {
             chara[x] = BitmapFactory.decodeResource(res,coin_images[x]);
         }
@@ -32,11 +31,11 @@ class Char {
         width = chara[0].getWidth();
         height = chara[0].getWidth();
 
-        // Scala om dimensioner
+        // Resize dimensions
         width /= 2;
         height /= 3;
 
-        // Skalar om karaktären nu
+        // Scale the character now
         width = (int) (width * GameView.screenRatioX) ;
         height = (int) (height * GameView.screenRatioY) ;
 
@@ -53,7 +52,7 @@ class Char {
         count = 0;
     }
 
-    // hämtar bilden av character, men det alternerar mellan chara1 och chara2 så det ser ut som att han rör sig
+    // retrieves the character image, alternating between chara1 and chara2 so it looks like he’s moving
     Bitmap getChar(){
         count++;
         if (count==4){
@@ -62,6 +61,7 @@ class Char {
         }
         return chara[count];
     }
+
     Rect getDetectCollision () {
         return new Rect((int)x,(int) y, (int)x + width/2 , (int)y + height/2);
     }
